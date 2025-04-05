@@ -1,0 +1,5 @@
+[
+    ["GET note/*", ["prv.trademarks.ttab.read"]],
+    ["POST note/*", ["prv.trademarks.ttab.write"]],
+    ["ANY actuator/health", []] 
+]

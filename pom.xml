@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Identification -->
+    <!-- *********************************************************************** -->
+    <groupId>pov.prv.divesh.api</groupId>
+    <artifactId>divesh-api</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <name>divesh-api Parent</name>
+    <description>divesh-api Description</description>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Parent -->
+    <!-- *********************************************************************** -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/>
+    </parent>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Properties -->
+    <!-- *********************************************************************** -->
+    <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <spring.boot.version>3.3.5</spring.boot.version>
+        <common.rest.service.util.version>2.0.1</common.rest.service.util.version>
+        <springdoc.version>2.2.0</springdoc.version>        
+        <springdoc_plugin.version>1.4</springdoc_plugin.version>
+        <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
+      
+        <buildnumber-maven-plugin.version>1.3</buildnumber-maven-plugin.version>
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <sonar.language>java</sonar.language>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <chemistry.version>1.1.0</chemistry.version>
+        <project.version>1.0.0-SNAPSHOT</project.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.language>java</sonar.language>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/target/coverage-reports/jacoco-ut.exec</sonar.jacoco.reportPath>
+        <sonar.exclusions>
+            /src/main/java/pov/prv/hos/tac/domain/*.*,/src/main/java/pov/prv/hos/tac/entities/*.*,/src/main/java/pov/prv/hos/tac/config/*.*,/src/main/java/pov/prv/hos/tac/utils/*.*,/src/main/java/pov/prv/hos/tac/repository/*.*,/src/main/java/pov/prv/hos/tac/service/diveshCoreDataService.java,/src/main/java/pov/prv/hos/tac/tacE2EApplication.java
+        </sonar.exclusions>
+ <maven-checkstyle.version>3.3.0</maven-checkstyle.version>
+        <maven-compliler-plugin.version>3.11.0</maven-compliler-plugin.version>
+        <hibernate-val.version>6.2.0.Final</hibernate-val.version>
+        <mybatis.version>3.2.2</mybatis.version>
+  <fasterxml.jackson.version>2.15.3</fasterxml.jackson.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <byte-buddy.version>1.14.8</byte-buddy.version>
+        <h2.version>2.1.214</h2.version>
+        <mysql.version>8.0.33</mysql.version>
+        <modelmapper.version>3.1.1</modelmapper.version>
+        <mockito.version>5.4.0</mockito.version>
+    </properties>
+
+    <!-- *********************************************************************** -->
+    <!--                 Project Dependencies Management                         -->
+    <!-- *********************************************************************** -->
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.jackson.version}</version>
+            </dependency>
+
+            <!--NSF componenents dependencies  TODO: REMOVE-->
+            <dependency>
+                <groupId>pov.prv.ecc.appdev</groupId>
+                <artifactId>common-rest-service-util</artifactId>
+                <version>${common.rest.service.util.version}</version>
+            </dependency>
+
+            <!--Documentation dependencies-->
+            <!--Documentation dependencies-->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>                
+            </dependency>
+
+
+            <!-- needed in main module -->
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>${modelmapper.version}</version>
+            </dependency>
+
+            <!-- To allow mockito latest to run on Java 21, Spring boot version maybe older 1.12.x -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!--
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${byte-buddy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            -->
+            <!-- End - To allow mockito latest to run on Java 21 -->
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!-- *********************************************************************** -->
+    <!-- Project Building -->
+    <!-- *********************************************************************** -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <!-- <version>${spring.boot.version}</version> -->
+                    <configuration>
+                        <image>
+                            <builder>paketobuildpacks/builder-jammy-base:latest</builder>
+                        </image>
+                    </configuration>
+                </plugin>                
+                <plugin>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>${git-commit-id-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>checkstyle</goal>
+                                <goal>checkstyle-aggregate</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>check-style</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>checkstyle</goal>
+                                <goal>checkstyle-aggregate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <failsOnError>false</failsOnError>
+                        <failOnViolation>false</failOnViolation>
+                        <violationSeverity>warning</violationSeverity>
+                        <linkXRef>true</linkXRef>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <executions>
+                        <!--Run integration tests. Bound to `integration-test` phase.-->
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <!--Verify the tests pass. Bound to `verify` phase.-->
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.*</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- *********************************************************************** -->
+    <!-- Project Modules -->
+    <!-- *********************************************************************** -->
+    <modules>
+        <module>main</module>
+        <module>test</module>
+        <!-- <module>api</module>
+        <module>client</module> -->
+        <module>devops</module>
+    </modules>
+    <!-- TODO: Uncomment when you have distribution management setup for your nexus account
+      <distributionManagement>
+          <repository>
+              <id>releases</id>
+              <url>https://prod-cicm.prv.pov/nexus3/repository/release-candidates</url>
+          </repository>
+
+          <snapshotRepository>
+              <id>snapshots</id>
+              <url>https://prod-cicm.prv.pov/nexus3/repository/maven-snapshots</url>
+          </snapshotRepository>
+      </distributionManagement>
+      -->
+</project>
+

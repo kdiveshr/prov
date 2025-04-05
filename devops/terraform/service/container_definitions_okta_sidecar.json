@@ -1,0 +1,63 @@
+[
+    {
+        "name": "${service_name}",
+        "image": "${container_image}",
+        "cpu": 768,
+        "memory": 7168,
+        "essential": true,
+        "portMappings": [
+        {
+            "containerPort": 8080,
+            "hostPort": 8080
+        }
+      ],
+      "environment": ${jsonencode(service_container_env_vars)},
+      "secrets": ${jsonencode(service_container_env_secrets)},
+      "logconfiguration": {
+            "logDriver" : "awslogs",
+            "options" : {
+                "awslogs-region": "${region}",
+                "awslogs-group": "/fargate/service/${environment_name}-${service_name}",
+                "awslogs-stream-prefix": "${environment_name}-${service_name}"
+            }
+      }
+    },
+    {
+        "name": "okta-authz",
+        "image": "${auth_image}",
+        "cpu": 256,
+        "memory": 1024,
+        "essential": true,
+        "portMappings": [
+            {
+                "containerPort": 8443,
+                "hostPort": 8443
+            }
+        ],
+        "environment": ${jsonencode(auth_container_env_vars)},
+        "secrets": ${jsonencode(auth_container_env_secrets)},
+        "logconfiguration": {
+            "logDriver" : "awslogs",
+            "options" : {
+                "awslogs-region": "${region}",
+                "awslogs-group": "/fargate/service/${environment_name}-${service_name}",
+                "awslogs-stream-prefix": "${environment_name}-${service_name}-auth"
+            }
+      }
+    },
+    {
+        "name": "ecs-cwagent",
+        "image": "${otel_cloudwatch_agent_image}",        
+        "essential": true,
+        "environment": ${jsonencode(otel_container_env_vars)},          
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-create-group": "true",
+            "awslogs-group": "/ecs/ecs-cwagent",
+            "awslogs-region": "${region}",
+            "awslogs-stream-prefix": "ecs"
+          }
+        }
+      }    
+]

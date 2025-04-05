@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Identification -->
+    <!-- *********************************************************************** -->
+    <artifactId>divesh-api-test</artifactId>
+
+    <name>divesh-api Test</name>
+    <description>divesh-api Test</description>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Parent -->
+    <!-- *********************************************************************** -->
+    <parent>
+        <groupId>pov.prv.divesh.api</groupId>
+        <artifactId>divesh-api</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Properties -->
+    <!-- *********************************************************************** -->
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Dependencies -->
+    <!-- *********************************************************************** -->
+    <dependencies>
+        <!--Service dependencies-->
+       
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>divesh-api-main</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!--Test dependencies-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.apache.logging.log4j</groupId>
+            		<artifactId>log4j-to-slf4j</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>ch.qos.logback</groupId>
+            		<artifactId>logback-classic</artifactId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- *********************************************************************** -->
+    <!-- Project Build -->
+    <!-- *********************************************************************** -->
+    <build>
+        <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

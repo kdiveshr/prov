@@ -1,0 +1,41 @@
+[
+    {
+        "name": "${service_name}",
+        "image": "${container_image}",
+        "cpu": 1024,
+        "memory": 8192,
+        "essential": true,
+        "portMappings": [
+        {
+            "containerPort": 8080,
+            "hostPort": 8080
+        }
+      ],
+      "environment": ${jsonencode(service_container_env_vars)},
+      "secrets": ${jsonencode(service_container_env_secrets)},
+      "logconfiguration": {
+            "logDriver" : "awslogs",
+            "options" : {
+                "awslogs-region": "${region}",
+                "awslogs-group": "/fargate/service/${environment_name}-${service_name}",
+                "awslogs-stream-prefix": "${environment_name}-${service_name}"
+            }
+      }
+    }, 
+    {
+      "name": "ecs-cwagent",
+      "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest",
+      "essential": true,
+      "environment": ${jsonencode(otel_config)},        
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/ecs-cwagent",
+          "awslogs-region": "${region}",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    } 
+ 
+]

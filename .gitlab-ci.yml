@@ -1,0 +1,91 @@
+default:
+  tags:
+    - $RUNNER_TAG 
+
+variables:
+  AWS_ACCOUNT_NUMBER: "345192829828"
+  AWS_ACCOUNT_NUMBER_PROD: "345192829828" # CHANGE_ME: Change to match Prod AWS Account #
+  SECRET_ID: "divesh/test" # CHANGE_ME
+  SONAR_PROJECT_KEY: "pov.prv.divesh.apipi:divesh-api" # CHANGE_ME
+  SERVICE_NAME: "divesh-api"
+  COMPONENT_ID: "1285001"
+  DOCUMENTATION_URL: "http://CHANGE_ME/swagger-ui"
+  NEXUS_IMAGE_NAME: "cto/${SERVICE_NAME}" # CHANGE_ME
+  ENVIRONMENT:
+    value: 'dev'
+    description: 'The environment to work in'
+    options:
+      - 'dev'
+      - 'test'
+      - 'prod'
+  RUNNER_TAG: divesh-aws
+  PROD_RUNNER_TAG: divesh-aws
+  NEXUS_RAW_DOCKER_DIRECTORY: "/pov/prv/cto/demo/docker" # CHANGE_ME
+  NEXUS_USER_VAR: $$NEXUS_USER
+  NEXUS_PASS_VAR: $NEXUS_PASSWORD
+  #NEXUS_IQ_USER_VAR: 
+  #NEXUS_IQ_USER_TOKEN_VAR: 
+
+  # Refactored config files to be less ambiguous; explicitly calling backend.tfvars -> service-backend.tfvars
+  TERRAFORM_BACKEND_PATH: ../config/$ENVIRONMENT/service-backend.tfvars
+  TERRAFORM_BACKEND_ECR_PATH: ../config/$ENVIRONMENT/ecr-backend.tfvars
+
+  # Add commit sha and pipeline to AWS resource tags. 
+  TF_VAR_ci_commit_sha: $CI_COMMIT_SHORT_SHA
+  TF_VAR_pipeline_url: "${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}"
+
+  # Variables for controlling what technologies are used
+  USE_MAVEN: "true"
+  USE_CONTAINER: "true"
+  USE_TERRAFORM: "true"
+  USE_WEBAPP: "true"
+  RESOURCES_DIR : $CI_PROJECT_DIR/main/src/main/resources
+
+
+
+get-configs:
+  stage: .pre
+  script: 
+    - rm -rf $RESOURCES_DIR
+    - mkdir -p $RESOURCES_DIR
+    - |
+        if [[ "$ENVIRONMENT" == "dev" ]]; then 
+          git clone --branch aws_config --depth 1 https://prod-cicm.prv.pov/gitlab/tac-center/tac-center-config.git resources-repo
+          cp -r resources-repo/intservices/PVT/green/modules/pov/prv/tace2e/diveshapi/configuration/main/* $RESOURCES_DIR
+        elif [[ "$ENVIRONMENT" == "test" ]]; then
+          git clone --branch aws_config --depth 1 https://prod-cicm.prv.pov/gitlab/tac-center/tac-center-config.git resources-repo
+          cp -r resources-repo/intservices/PVT/blue/modules/pov/prv/tace2e/diveshapi/configuration/main/* $RESOURCES_DIR
+        elif [[ "$ENVIRONMENT" == "prod" ]]; then
+          git clone --branch release --depth 1 https://prod-cicm.prv.pov/gitlab/tac-center/tac-center-config.git resources-repo
+          cp -r resources-repo/intservices/production/blue/modules/pov/prv/tace2e/diveshapi/configuration/main/* $RESOURCES_DIR
+        fi
+    - rm -rf resources-repo
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/
+
+    
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - when: always
+
+include:
+  - project: enterprise-community/gitlab-templates/pipelines
+    ref: "4.2.3" 
+    file: templates/reference-pipeline.yml
+
+  # OPTIONAL blue/green jobs
+  # - component: $CI_SERVER_FQDN/enterprise-community/gitlab-templates/components/aws/invoke-lambda@1.0.1
+  #   inputs: # swap traffic
+  #     stage: swap-traffic
+  #     name: swap-traffic
+  #     lambda_name: $ENVIRONMENT-$SERVICE_NAME-bg-updater
+  #     payload: '{"action":"swap_traffic"}'
+  # - component: $CI_SERVER_FQDN/enterprise-community/gitlab-templates/components/aws/invoke-lambda@1.0.1
+  #   inputs: # destroy passive
+  #     stage: destroy-passive
+  #     name: destroy-passive
+  #     lambda_name: $ENVIRONMENT-$SERVICE_NAME-bg-updater
+  #     payload: '{"action":"destroy_passive"}'

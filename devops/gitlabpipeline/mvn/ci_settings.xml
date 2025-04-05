@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<!-- localRepository
+	 | The path to the local repository maven will use to store artifacts.
+	 |
+	 | Default: ~/.m2/repository
+	-->
+	<localRepository>~/.m2/repository</localRepository>
+
+	<!-- servers
+	 | This is a list of authentication profiles, keyed by the server-id used within the system.
+	 | Authentication profiles can be used whenever maven must make a connection to a remote server.
+	 | Use Nexus Tokens: https://prod-cicm.prv.pov/gitlab/scdad/wiki/-/wikis/Nexus-3:-User-Token-Generation
+	 |-->
+    <servers>
+		<server>
+			<id>releases</id>
+			<username>${env.NEXUS_TOKEN_USER}</username>
+			<password>${env.NEXUS_TOKEN_PASS}</password>
+		</server>
+		<server>
+			<id>snapshots</id>
+			<username>${env.NEXUS_TOKEN_USER}</username>
+			<password>${env.NEXUS_TOKEN_PASS}</password>
+		</server>
+		<server>
+            <id>cicm-nexus-101.prv.pov</id>
+			<username>${env.NEXUS_TOKEN_USER}</username>
+			<password>${env.NEXUS_TOKEN_PASS}</password>
+		</server>				
+    </servers>
+
+    <profiles>
+
+        <profile>
+            <id>nexus</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+    </profiles>
+
+
+	<!-- mirrors
+	 | This is a list of mirrors to be used in downloading artifacts from remote repositories.
+	 |
+	 | It works like this: a POM may declare a repository to use in resolving certain artifacts.
+	 | However, this repository may have problems with heavy traffic at times, so people have mirrored
+	 | it to several places.
+	 |
+	 | That repository definition will have a unique id, so we can create a mirror reference for that
+	 | repository, to be used as an alternate download site. The mirror site will be the preferred
+	 | server for that repository.
+	 |-->
+	<mirrors>
+		<!-- mirror
+		 | Specifies a repository mirror site to use instead of a given repository. The repository that
+		 | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used
+		 | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.
+		 |
+		<mirror>
+			<id>mirrorId</id>
+			<mirrorOf>repositoryId</mirrorOf>
+			<name>Human Readable Name for this Mirror.</name>
+			<url>http://my.repository.com/repo/path</url>
+		</mirror>-->
+        <mirror>
+            <id>nexus</id>
+            <mirrorOf>*</mirrorOf>
+            <url>https://prod-cicm.prv.pov/nexus3/repository/maven-public/</url>
+        </mirror>
+    </mirrors>
+</settings>
